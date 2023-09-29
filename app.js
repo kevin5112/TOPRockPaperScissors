@@ -1,6 +1,3 @@
-
-
-
 function getComputerChoice() {
     let compChoice = Math.floor(Math.random() * 3);
     if (compChoice === 0) {
@@ -13,7 +10,7 @@ function getComputerChoice() {
 }
 
 function playRound(playerSelection, computerSelection) {
-    playerChoice = playerSelection.toLowerCase();
+    let playerChoice = playerSelection.toLowerCase();
     console.log(`The computer picked ${computerSelection}`);
 
     if (playerChoice === "rock") {
@@ -50,38 +47,64 @@ function playRound(playerSelection, computerSelection) {
             return 0;
         }
     }
-    
 }
 
 function game() {
     let playerRoundWin = 0;
     let computerRoundWin = 0;
+    let result = document.querySelector(".result");
+    let playersResult = document.querySelector(".playerScore");
+    let computerResult = document.querySelector(".computerScore");
+    let resultWinner = document.createElement("h1");
+    let info = document.querySelector(".info");
+    let selectionInfo = document.createElement('h2');
+    info.appendChild(selectionInfo)
+    let roundResult = document.createElement('h3');
+    info.appendChild(roundResult);
 
-    while (playerRoundWin < 5 && computerRoundWin < 5) {
-        let playerSelection;
-        do {
-            playerSelection = prompt("pick rock, paper, or scissors? ").toLowerCase();
-        } while (playerSelection != "rock" && playerSelection != "paper" && playerSelection != "scissors")
-        let computerSelection = getComputerChoice();
-        let winner = playRound(playerSelection, computerSelection);
-        if (winner === 1) {
-            console.log("You get a point!");
-            playerRoundWin++;
-        } else if(winner === 2) {
-            console.log("The computer gets a point!");
-            computerRoundWin++;
-        } else {
-            console.log("No one gets a point");
-        }
-        console.log(`Current scoreboard: player - ${playerRoundWin} /// computer - ${computerRoundWin}`);
-    }
 
-    if (playerRoundWin === 4) {
-        console.log("Game over! Player wins!!");
-    } else {
-        console.log("Game over! Computer wins!!");
-    }
+    let playBtn = document.querySelectorAll('button');
+    playBtn.forEach(btn =>  {
+        btn.addEventListener('click', () => {
+            let computerSelection = getComputerChoice();
+            let winner = playRound(btn.id, computerSelection);
+
+            selectionInfo.textContent = `Computer has picked ${computerSelection} against your ${btn.id}`;
+            if (winner === 1) {
+                
+                roundResult.textContent = "You get a point!";
+                console.log("You get a point!");
+                playerRoundWin++;
+            } else if(winner === 2) {
+                roundResult.textContent = "The computer gets a point!";
+                console.log("The computer gets a point!");
+                computerRoundWin++;
+            } else {
+                roundResult.textContent = "No one gets a point!";
+                console.log("No one gets a point");
+            }
+
+            if (playerRoundWin === 5) {
+                console.log("Game over! Player wins!!");
+                playBtn.forEach( btn => btn.disabled=true );
+                resultWinner.textContent = "Game over! Player wins!!";
+                result.appendChild(resultWinner);
+            } else if (computerRoundWin === 5) {
+                console.log("Game over! Computer wins!!");
+                playBtn.forEach( btn => btn.disabled=true );
+                resultWinner.textContent = "Game over! Computer wins!!";
+                result.appendChild(resultWinner);
+            }
+            console.log(`Current scoreboard: player - ${playerRoundWin} /// computer - ${computerRoundWin}`);
+            playersResult.textContent = `Player's Score: ${playerRoundWin}`;
+            computerResult.textContent = `Computer's Score: ${computerRoundWin}`;
+        
+        }); 
+    });
+
+    
 
 }
+
 
 game();
